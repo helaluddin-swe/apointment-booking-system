@@ -11,6 +11,7 @@ const doctorSchema = new mongoose.Schema({
   status: { type: String,enum:["ACTIVE","INACTIVE"], default:"ACTIVE" }, 
   fees: { type: Number, required: true },
   about: { type: String, required: true },
+  available: { type: Boolean, default: true },
   date: { type: Number, }, 
   address: { type: Object, required: true },
   book_slot: { type: Object, default: {} },

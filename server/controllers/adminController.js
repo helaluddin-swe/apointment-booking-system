@@ -1,11 +1,13 @@
 
 
-
 import bcrypt from "bcryptjs"
 import DoctorModel from "../models/doctorModel.js";
 import {v2 as cloudinary} from "cloudinary"
-import validator from "validator"
-// add doctor in admin panel 
+import validator from "validator" 
+import jwt from "jsonwebtoken"
+
+
+// add doctor api --admin 
 // POST /api/admin/add-doctor
 
 export const addDoctor=async(req,res)=>{
@@ -57,5 +59,30 @@ export const addDoctor=async(req,res)=>{
     // update a error message if working or failed to saved data in mongodb database
     console.log(error.message)
     return res.status(500).json({success:false,message:error.message})
+  }
+}
+
+
+// admin login -
+// pOST /api/admin/login 
+
+export const adminLogin=async(req,res)=>{
+  try {
+    const {email,password}=req.body 
+
+    // check email and pawword with admin email and pawwrod
+    if(email ===process.env.ADMIN_EMAIL && password ===process.env.ADMIN_PASSWORD){
+
+      // if email and password are same as admin then create a token jsonwebtoken
+      const token= jwt.sign(email+password,process.env.JWT_SECRET)
+       return res.status(200).json({success:true,token})
+    }
+    else {  
+      return res.status(401).json({success:false,message:"Invalid Credentials"})
+    }
+    
+  } catch (error) {
+     console.log(error.message)
+    return res.status(500).json({success:false,message:error.message}) 
   }
 }
